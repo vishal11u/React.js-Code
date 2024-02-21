@@ -8,6 +8,8 @@ import { RiPencilFill } from "react-icons/ri";
 import { MdDelete } from "react-icons/md";
 import { FaEye } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
+import { FcRules } from "react-icons/fc";
+import Tooltip from '@mui/material/Tooltip';
 
 function HookForm() {
     const schema = yup.object({
@@ -88,14 +90,14 @@ function HookForm() {
 
     return (
         <div className='pt-5 bg-gray-200 h-screen'>
-            <h1 className='text-center text-[20px] font-semibold'>LOGIN FORM</h1>
-            <div className='mt-2 flex items-center justify-center py-1 bg-white w-[33.2vw] mx-auto'>
+            <h1 className='text-center text-[20px] font-semibold'>Registration Form</h1>
+            <div className='mt-2 flex items-center justify-center pt-3 bg-white w-[33.2vw] mx-auto'>
                 <div className='border-[2px] h-[19.9vh] w-[7.5vw]'>
                     <button onClick={handleButtonClick} style={{ cursor: 'pointer', padding: '6.2px' }}>
                         {imageFile ? (
                             <>
                                 <img className='' src={URL.createObjectURL(imageFile)} alt="Uploaded" style={{ maxWidth: '100px' }} />
-                                <img className='h-6 pt-1 mx-auto' src='https://cdn.icon-icons.com/icons2/1380/PNG/512/vcsnormal_93488.png' alt='' />
+                                <img className='h-6 pt-1 mx-auto z-10' src='https://cdn.icon-icons.com/icons2/1380/PNG/512/vcsnormal_93488.png' alt='' />
                             </>
                         ) : (
                             <>
@@ -104,7 +106,6 @@ function HookForm() {
                             </>
                         )}
                     </button>
-
                     <input
                         type="file"
                         ref={fileInputRef}
@@ -115,7 +116,7 @@ function HookForm() {
                 </div>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className='border py-4 w-1/3 mx-auto shadow-lg bg-white'>
+            <form onSubmit={handleSubmit(onSubmit)} className='border py-2 w-1/3 mx-auto shadow-lg bg-white'>
                 <div className=' pt-2 p-4 mx-auto bg-[#ffffff1d] border-black backdrop-blur-[10px]'>
                     <div className='flex items-center space-x-3 mt-2'>
                         <FormControl sx={{ width: '85px' }}>
@@ -128,7 +129,6 @@ function HookForm() {
                                 sx={{ height: '42px' }}
                                 aria-label="Prefix"
                                 variant="outlined"
-
                                 error={errors.Prefix ? true : false} >
                                 <MenuItem value={'Mr.'}>Mr.</MenuItem>
                                 <MenuItem value={'Mis.'}>Mis.</MenuItem>
@@ -196,7 +196,9 @@ function HookForm() {
                             {editingIndex !== null ? "Update" : "Submit"}
                         </button>
                         {users.length > 0 && (
-                            <button className='float-right' type='button' onClick={() => setTable(true)}>display Table</button>
+                            <Tooltip title="Table" arrow >
+                                <button class="float-right mt-2" type='button' onClick={() => setTable(true)}><FcRules size={30} /></button>
+                            </Tooltip>
                         )}
                     </div>
                 </div>
@@ -206,15 +208,19 @@ function HookForm() {
                     <table className='w-[80%] border mt-5 mx-auto shadow-lg'>
                         <thead className='bg-gray-800 text-white'>
                             <tr className='font-medium bg-gray-800 text-white'>
-                                <th className='font-medium'>Prefix</th>
-                                <th className='font-medium'>First Name</th>
-                                <th className='font-medium'>Last Name</th>
-                                <th className='font-medium'>Email</th>
-                                <th className='font-medium'>Mobile Number</th>
-                                <th className='font-medium'>Birth Date</th>
-                                <th className='font-medium'>Address</th>
-                                <th className='font-medium'>Actions</th>
-                                <th className='font-medium'><button type='button' onClick={() => setTable(false)}>❌</button></th>
+                                <th className='font-medium py-1.5'>Prefix</th>
+                                <th className='font-medium py-1.5'>First Name</th>
+                                <th className='font-medium py-1.5'>Last Name</th>
+                                <th className='font-medium py-1.5'>Email</th>
+                                <th className='font-medium py-1.5'>Mobile Number</th>
+                                <th className='font-medium py-1.5'>Birth Date</th>
+                                <th className='font-medium py-1.5'>Address</th>
+                                <th className='font-medium py-1.5'>Actions</th>
+                                <th className='bg-white'>
+                                    <Tooltip title=" Close Table" arrow placement='right'>
+                                        <button className='float-righ' type='button' onClick={() => setTable(false)}>❌</button>
+                                    </Tooltip>
+                                </th>
                             </tr>
                         </thead>
                         <tbody className='bg-white'>
@@ -228,9 +234,15 @@ function HookForm() {
                                     <td className='text-center py-2'>{user.date}</td>
                                     <td className='text-center py-2'>{user.Address}</td>
                                     <td className='text-center py-2 flex justify-center items-center space-x-3'>
-                                        <button onClick={() => handleEdit(index)}><RiPencilFill size={20} /></button>
-                                        <button onClick={() => handleDelete(index)}><MdDelete size={20} /></button>
-                                        <button onClick={() => handleOpen(index)}><FaEye size={20} /></button>
+                                        <Tooltip title="Edit" arrow >
+                                            <button onClick={() => handleEdit(index)}><RiPencilFill size={20} /></button>
+                                        </Tooltip>
+                                        <Tooltip title="Delete" arrow >
+                                            <button onClick={() => handleDelete(index)}><MdDelete size={20} /></button>
+                                        </Tooltip>
+                                        <Tooltip title="View" arrow >
+                                            <button onClick={() => handleOpen(index)}><FaEye size={20} /></button>
+                                        </Tooltip>
                                     </td>
                                 </tr>
                             ))}
@@ -242,28 +254,34 @@ function HookForm() {
                 onClose={handleClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
+                sx={{ top: '8%' }}
                 closeAfterTransition>
                 <Fade in={open}>
-                    <div className='bg-white p-5 w-[80vw] h-[50vh] mx-auto mt-20'>
+                    <div className='bg-white p-5 w-[60vw] h-[31vh] mx-auto mt-20'>
                         {viewUserIndex !== null && (
                             <div>
                                 <button type='button' className='text-red-600 border-[2px] border-red-600 float-right' onClick={handleClose}><RxCross2 size={20} /> </button>
-                                <h2 id="modal-modal-title" className='text-center text-[20px] font-medium'>User Information</h2>
-                                <div className='bg-gray-200'>
-                                    <p id="modal-modal-description">
-                                        Prefix: {users[viewUserIndex].Prefix}<br />
-                                    </p>
-                                    First Name: {users[viewUserIndex].Firstname}<br />
-                                    Last Name: {users[viewUserIndex].Lastname}<br />
-                                    Email: {users[viewUserIndex].abcgmail}<br />
-                                    Mobile Number: {users[viewUserIndex].number}<br />
-                                    Birth Date: {users[viewUserIndex].date}<br />
-                                    Address: {users[viewUserIndex].Address}<br />
-                                    {users[viewUserIndex].image ? (
-                                        <img className='h-12' src={URL.createObjectURL(users[viewUserIndex].image)} alt="User" />
-                                    ) : (
-                                        <img src="https://www.pngitem.com/pimgs/m/581-5813504_avatar-dummy-png-transparent-png.png" alt="Dummy User" className='h-12' />
-                                    )}
+                                <h2 id="modal-modal-title" className='text-center text-[25px] font-semibold'>User Information</h2>
+                                <div className='border flex justify-between mt-3 py-2 px-4'>
+                                    <div className=''>
+                                        <p className=' text-gray-600 font-semibold text-[17px]'> First Name: <span className='font-medium text-black'>{users[viewUserIndex].Prefix + "" + users[viewUserIndex].Firstname + "" + users[viewUserIndex].Lastname}</span></p>
+                                        <p className='py-2 text-gray-600 font-semibold text-[17px]'> Email: <span className='font-medium text-black'>{users[viewUserIndex].abcgmail}</span></p>
+                                        <p className=' text-gray-600 font-semibold text-[17px]'> Mobile Number: <span className='font-medium text-black'>{users[viewUserIndex].number}</span></p>
+                                    </div>
+                                    <div className=''>
+                                        <p className=' text-gray-600 font-semibold text-[17px]'>Birth Date: <span className='font-medium text-black'>{users[viewUserIndex].date}</span></p>
+                                        <p className='py-2 text-gray-600 font-semibold text-[17px]'>Address:<span className='font-medium text-black'> {users[viewUserIndex].Address}</span></p>
+                                    </div>
+                                    <div>
+                                        {users[viewUserIndex].image ? (
+                                            <>
+                                                <p className=''></p>
+                                                <img className='h-28 shadow-lg' src={URL.createObjectURL(users[viewUserIndex].image)} alt="User" />
+                                            </>
+                                        ) : (
+                                            <img src="https://www.pngitem.com/pimgs/m/581-5813504_avatar-dummy-png-transparent-png.png" alt="Dummy User" className='h-12' />
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         )}
