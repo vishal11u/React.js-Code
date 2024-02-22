@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import TextField from '@mui/material/TextField';
-import { useForm } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { InputLabel, Modal, Fade, MenuItem, Select, FormControl } from '@mui/material';
@@ -33,7 +33,6 @@ function HookForm() {
     const [open, setOpen] = useState(false);
     const [imageFile, setImageFile] = useState(null);
     const [table, setTable] = useState(null);
-    const [prefix, setPrifix] = useState('');
 
     const fileInputRef = useRef(null);
 
@@ -156,6 +155,7 @@ function HookForm() {
                         <TextField
                             sx={{ width: '15.5vw' }}
                             label="Email*"
+                            type='email'
                             size='small'
                             variant="outlined"
                             {...register("abcgmail")}
@@ -191,8 +191,8 @@ function HookForm() {
                         />
                     </div>
 
-                    <div className='text-center mt-3 rounded'>
-                        <button type='submit' className='bg-green-800 text-white py-2 px-8 mx-auto rounded'>
+                    <div className='text-center flex justify-center items-center mt-3 rounded'>
+                        <button type='submit' className='bg-green-800 text-white py-2 px-8 rounded'>
                             {editingIndex !== null ? "Update" : "Submit"}
                         </button>
                         {users.length > 0 && (
@@ -274,10 +274,7 @@ function HookForm() {
                                     </div>
                                     <div>
                                         {users[viewUserIndex].image ? (
-                                            <>
-                                                <p className=''></p>
-                                                <img className='h-28 shadow-lg' src={URL.createObjectURL(users[viewUserIndex].image)} alt="User" />
-                                            </>
+                                            <img className='h-28 shadow-lg' src={URL.createObjectURL(users[viewUserIndex].image)} alt="User" />
                                         ) : (
                                             <img src="https://www.pngitem.com/pimgs/m/581-5813504_avatar-dummy-png-transparent-png.png" alt="Dummy User" className='h-12' />
                                         )}
