@@ -9,41 +9,95 @@ import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import { MdDelete } from "react-icons/md";
 import axios from 'axios';
+import { toast, Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function ApiCRUD({ users, setUsers }) {
-    const dataDelete = async (i,id) => {
-        try {
-            const response = await axios.delete(`http://192.168.0.115:5001/api/saveFront/deletedata/${id}`);
-            const newUsers = response.data;
-            setUsers(newUsers);
-            let cut =(users[id])
-            const dele = users.filter (item => item !== cut ) 
-            setUsers(dele)
-        } catch (error) {
-            console.error("There was an error fetching the users:", error);
-        }
+    console.log('data is' + users);
+
+    const handleData = () => {
+        axios.get("http://192.168.0.115:5001/api/saveFront/getFrontendFrom")
+            .then((response) => {
+                console.log(response.data.result);
+                let getData = (response.data.result)
+                setUsers(getData)
+            })
+            .catch((error) => {
+                console.log("error is" + error);
+            })
+    }
+
+    const handleShow = () => {
+        axios.get("http://192.168.0.115:5001/api/saveFront/getFrontendFrom")
+            .then((response) => {
+                console.log(response.data.result);
+                setUsers(response.data.result)
+            })
+            .catch((error) => {
+                console.log("error is" + error);
+            })
+    }
+
+    const dataDelete = (i, id) => {
+        axios.delete(`http://192.168.0.115:5001/api/saveFront/deletedata/${id}`)
+            .then((response) => {
+                console.log(response.data.result);
+                if (i !== null) {
+                    let newData = [...users];
+                    newData.splice(i, 1)
+                    setUsers(newData);
+                }
+                toast.success('Data deleted', {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
+            })
+            .catch((error) => {
+                console.log("error is" + error);
+                toast.error('Server error', {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
+            })
     };
 
-    const fetchUsers = async () => {
-        try {
-            const response = await axios.get("http://192.168.0.115:5001/api/saveFront/getFrontendFrom");
-            const res = response.data
-            setUsers(res);
-        } catch (error) {
-            console.error("There was an error fetching the users:", error);
-        }
-    };
+    const handleDelete = (i) => {
+        let remove = ([...users])
+        remove.splice(i, 1)
+        setUsers(remove)
+    }
 
     React.useEffect(() => {
-        fetchUsers();
-    }, []);
+        handleData();
+        handleShow();
+    }, [])
 
-    const handleSearch = async (searchQuery) => {
-        const filteredUsers = users.filter((user) =>
-            user.firstname.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-        setUsers(filteredUsers);
+    const handleSearch = (searchQuery) => {
+        if (searchQuery.trim() !== '') {
+            const res = users.filter((user) =>
+                user.firstname.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                user.mobileno.includes(searchQuery)
+            );
+            setUsers(res);
+        } else {
+            setUsers([...users]);
+        }
     };
+
 
     return (
         <TableContainer component={Paper}>
@@ -66,7 +120,7 @@ export default function ApiCRUD({ users, setUsers }) {
                 </TableHead>
                 <TableBody>
                     {users.map((row, i) => (
-                        <TableRow key={i.firstname} sx={{ '&:last-child td, &:last-child th': { border: 0 } }} >
+                        <TableRow key={i.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }} >
                             <TableCell> {row.firstname}</TableCell>
                             <TableCell>{row.lastname}</TableCell>
                             <TableCell>{row.gmail}</TableCell>
@@ -77,7 +131,7 @@ export default function ApiCRUD({ users, setUsers }) {
                             <TableCell>{row.pincode}</TableCell>
                             <TableCell>{row.bloodGroup}</TableCell>
                             <TableCell>{row.ocupation}</TableCell>
-                            <TableCell className='cursor-pointer' onClick={dataDelete}><MdDelete size={23} /></TableCell>
+                            <TableCell className='cursor-pointer' onClick={() => dataDelete(row.id, i)}><MdDelete size={23} /></TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
