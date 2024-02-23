@@ -5,6 +5,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import axios from 'axios';
 import ApiCRUD from './ApiCRUD'
+import { toast, Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const schema = yup.object({
     firstname: yup.string().required(),
@@ -26,16 +28,39 @@ function UserForm() {
 
     const [users, setUsers] = useState([]);
 
-    const onSubmit = async (data, e) => {
+    const onSubmit = (data, e) => {
         e.preventDefault();
         console.log("data", data);
-        try {
-            await axios.post("http://192.168.0.115:5001/api/saveFront/frontfrom", data);
-            setUsers([...users, data])
-            reset();
-        } catch (error) {
-            console.error("Submission error:", error);
-        }
+        axios.post("http://192.168.0.115:5001/api/saveFront/frontfrom", data)
+            .then((response) => {
+                console.log(response);
+                reset();
+                toast.success('User created', {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
+            })
+            .catch((error) => {
+                console.log("Error" + error);
+                toast.error('Error', {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
+            })
     };
 
 
