@@ -70,24 +70,26 @@ function Dropdowns() {
                     </button>
                 </div>
             </div>
-            <table className="table-fixed w-full mt-8">
-                <thead>
-                    <tr>
-                        <th className="border px-4 py-2">Country</th>
-                        <th className="border px-4 py-2">State</th>
-                        <th className="border px-4 py-2">City</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {selectedData.map((data, index) => (
-                        <tr key={index}>
-                            <td className="border px-4 py-2">{data.country}</td>
-                            <td className="border px-4 py-2">{data.state}</td>
-                            <td className="border px-4 py-2">{data.city}</td>
+            {selectedData.length > 0 ? (
+                <table className="table-fixed w-1/3 text-center mx-auto mt-8">
+                    <thead>
+                        <tr>
+                            <th className="border px-4 py-2">Country</th>
+                            <th className="border px-4 py-2">State</th>
+                            <th className="border px-4 py-2">City</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {selectedData.map((data, index) => (
+                            <tr key={index}>
+                                <td className="border px-4 py-2">{data.country}</td>
+                                <td className="border px-4 py-2">{data.state}</td>
+                                <td className="border px-4 py-2">{data.city}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            ) : (null)}
         </div>
     )
 }
